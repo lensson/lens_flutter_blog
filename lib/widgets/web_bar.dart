@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lens_flutter_blog/config/assets.dart';
+import 'package:lens_flutter_blog/config/icon_font.dart';
 
 
 export '../config/platform_type.dart';
@@ -59,11 +61,22 @@ class _WebBarState extends State<WebBar> {
           if (isNotMobile)
             Row(
               children: <Widget>[
-                FlutterLogo(
-                  size: getScaleSizeByHeight(height, 75.0),
-                  textColor: Colors.blueGrey,
-//                  colors: Colors.blueGrey,
+                Image(
+                    image: AssetImage(Assets.LOGO),
+                  height: getScaleSizeByHeight(height, 75.0),
+                  fit: BoxFit.cover,
                 ),
+//                Icon(
+//
+//                    IconFont.iconmala,
+//                    color: Color.fromARGB(255, 255, 0, 0),
+//                  size: getScaleSizeByHeight(height, 75.0),
+//                ),
+//                FlutterLogo(
+//                  size: getScaleSizeByHeight(height, 75.0),
+//                  textColor: Colors.blueGrey,
+////                  colors: Colors.blueGrey,
+//                ),
                 const SizedBox(
                   width: 30.0,
                 ),
@@ -76,10 +89,11 @@ class _WebBarState extends State<WebBar> {
                   width: 30.0,
                 ),
                 Text(
-                  'Flutter',
+                  'Mala Blog',
                   style: TextStyle(
                     fontSize: fontSize,
-                    fontFamily: 'huawen_kt',
+                    fontFamily: Assets.Montserrat,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
@@ -107,7 +121,8 @@ class _WebBarState extends State<WebBar> {
             '首页',
             style: TextStyle(
               fontSize: fontSize,
-              fontFamily: 'huawen_kt',
+//              fontFamily: 'huawen_kt',
+            fontFamily: Assets.MontserratBold,
             ),
           ),
           onPressed: () {
@@ -130,7 +145,7 @@ class _WebBarState extends State<WebBar> {
             '标签',
             style: TextStyle(
               fontSize: fontSize,
-              fontFamily: 'huawen_kt',
+                fontFamily: Assets.MontserratBold,
             ),
           ),
           onPressed: () {
@@ -147,7 +162,7 @@ class _WebBarState extends State<WebBar> {
             '归档',
             style: TextStyle(
               fontSize: fontSize,
-              fontFamily: 'huawen_kt',
+                fontFamily: Assets.MontserratBold,
             ),
           ),
           onPressed: () {
@@ -164,7 +179,7 @@ class _WebBarState extends State<WebBar> {
             '友链',
             style: TextStyle(
               fontSize: fontSize,
-              fontFamily: 'huawen_kt',
+                fontFamily: Assets.MontserratBold,
             ),
           ),
           onPressed: () {
@@ -181,7 +196,7 @@ class _WebBarState extends State<WebBar> {
             '关于',
             style: TextStyle(
               fontSize: fontSize,
-              fontFamily: 'huawen_kt',
+              fontFamily: Assets.MontserratBold,
             ),
           ),
           onPressed: () {

@@ -17,11 +17,11 @@ class AppModule extends MainModule {
     ModularRouter(archivePage, child: (_, args) => ArchivePage()),
     ModularRouter(linkPage, child: (_, args) => FriendLinkPage()),
     ModularRouter(aboutPage, child: (_, args) => AboutPage()),
-//    ModularRouter("$articlePage/:name",
-//            child: (_, args) => ArticlePage(
-//                  name: args.params['name'],
-//                  articleData: args.data,
-//                )),
+    ModularRouter("$articlePage/:name",
+            child: (_, args) => ArticlePage(
+                  name: args.params['name'],
+                  articleData: args.data,
+                )),
       ];
 
   @override
@@ -48,4 +48,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
     );
   }
+}
+
+void goHome(context){
+  Navigator.pushNamed(context, homePage);
 }

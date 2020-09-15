@@ -37,6 +37,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
 
+
+  # Toast
+  fluttertoast: ^7.1.1
+
+  # http
+  dio: 3.0.10
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -50,6 +57,18 @@ flutter:
     - family: huawen_kt
       fonts:
         - asset: assets/fonts/huawen_kt.ttf
+    - family: iconfont
+      fonts:
+        - asset: assets/fonts/mala_icons.ttf
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+          weight: 100
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+    - family: MontserratBold
+      fonts:
+        - asset: assets/fonts/Montserrat-Bold.ttf
   assets:
     - assets/img/
     - assets/fonts/

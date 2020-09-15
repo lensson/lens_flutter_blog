@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lens_flutter_blog/apis/categoryAPI.dart';
 import 'package:lens_flutter_blog/config/platform_type.dart';
 import 'package:lens_flutter_blog/json/article_item_bean.dart';
 import 'package:lens_flutter_blog/json/article_json_bean.dart';
 import 'package:lens_flutter_blog/logic/home_page_logic.dart';
-
+import 'package:lens_flutter_blog/json/category.dart';
 import 'package:lens_flutter_blog/widgets/module.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,9 +21,22 @@ class HomePageState extends State<HomePage> {
   List<ArticleItemBean> showDataList = [];
   Map<ArticleType, List<ArticleItemBean>> dataMap = Map();
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+  List<Model> categoryList = [];
 
   @override
   void initState() {
+
+    CategoryAPI.getCategoryList(context: this.context).then((value){
+      print('value = $value');
+      this.categoryList = value.models;
+      this.categoryList.sort((a,b){
+        if(a.id<b.id)
+          return -1;
+        return 1;
+      });
+      this.refresh();
+    });
+
     logic.getArticleData('config_study').then((List<ArticleItemBean> data) {
       dataMap[ArticleType.study] = data;
       showDataList.addAll(data);
@@ -100,7 +114,7 @@ class HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          "我的\n博客",
+          "Mala Blog",
           style: TextStyle(
             fontSize: getScaleSizeByHeight(height, 90.0),
             fontFamily: "huawen_kt",
@@ -109,6 +123,8 @@ class HomePageState extends State<HomePage> {
         SizedBox(
           height: getScaleSizeByHeight(height, 40.0),
         ),
+        this.getCategoryContainer(height, fontSizeByHeight),
+        /**
         FlatButton(
           onPressed: () {
             if (type == ArticleType.study) return;
@@ -129,7 +145,7 @@ class HomePageState extends State<HomePage> {
             }
           },
           child: Text(
-            '学习',
+            'Category-1',
             style: TextStyle(
               fontSize: fontSizeByHeight,
               color: type == ArticleType.study ? null : const Color(0xff9E9E9E),
@@ -160,7 +176,7 @@ class HomePageState extends State<HomePage> {
             }
           },
           child: Text(
-            '生活',
+            'Category-2',
             style: TextStyle(
               fontSize: fontSizeByHeight,
               color: type == ArticleType.life ? null : Color(0xff9E9E9E),
@@ -191,14 +207,14 @@ class HomePageState extends State<HomePage> {
             }
           },
           child: Text(
-            '习题',
+            'Category-3',
             style: TextStyle(
               fontSize: fontSizeByHeight,
               color: type == ArticleType.topic ? null : Color(0xff9E9E9E),
               fontFamily: 'huawen_kt',
             ),
           ),
-        ),
+        ),**/
         if (isNotMobile)
           Container()
         else
@@ -220,6 +236,49 @@ class HomePageState extends State<HomePage> {
 //                    context: context, delegate: SearchDelegateWidget(map));
               }),
       ],
+    );
+  }
+
+  Widget getCategoryContainer(height,fontSizeByHeight){
+    if(this.categoryList==null || this.categoryList.length==0){
+      return Container();
+    }
+
+    return Container(
+      child: Column(
+        children: List.generate(this.categoryList.length, (index){
+          return Container(
+            child: Column(
+                children: [
+                  getCategoryButton(this.categoryList[index].name, fontSizeByHeight),
+                  getCategorySpacerBox(height),
+                ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget getCategorySpacerBox(height){
+    return SizedBox(
+      height: getScaleSizeByHeight(height, 40.0),
+    );
+  }
+
+  Widget getCategoryButton(String name,fontSizeByHeight){
+    return FlatButton(
+        onPressed: (){
+
+        },
+        child: Text(
+          name,
+          style: TextStyle(
+            fontSize: fontSizeByHeight,
+            color: type == ArticleType.topic ? null : Color(0xff9E9E9E),
+            fontFamily: 'huawen_kt',
+          ),
+        ),
     );
   }
 

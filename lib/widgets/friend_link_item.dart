@@ -1,13 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:lens_flutter_blog/config/assets.dart';
+import 'package:lens_flutter_blog/json/friend_link.dart';
 import '../config/url_launcher.dart';
-import '../json/link_item_bean.dart';
+
 
 class FriendLinkItem extends StatelessWidget {
+
   const FriendLinkItem({Key key, @required this.bean}) : super(key: key);
 
-  final LinkItemBean bean;
+  final FriendLink bean;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,7 @@ class FriendLinkItem extends StatelessWidget {
                           margin: EdgeInsets.only(top: 10),
                           alignment: Alignment.center,
                           child: Text(
-                            bean.linkName,
+                            bean.name,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontFamily: 'huawen_kt',
@@ -49,24 +52,20 @@ class FriendLinkItem extends StatelessWidget {
                         Expanded(
                           child: Container(
                               margin: const EdgeInsets.all(10),
-                              child: Wrap(
-                                // ignore: always_specify_types
-                                children: List.generate(
-                                    bean.linkDescription.length, (index) {
-                                  return Container(
-                                    margin: const EdgeInsets.all(10),
-                                    child: Text(bean.linkDescription[index],
-                                        style: TextStyle(
-                                          fontFamily: 'huawen_kt',
-                                          fontSize: (Random().nextInt(10) + 15)
-                                              .toDouble(),
-                                          color: Colors.primaries[Random()
-                                              .nextInt(
-                                                  Colors.primaries.length)],
-                                        )),
-                                  );
-                                }),
-                              )),
+
+                              child: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: Text(bean.description,
+                                    style: TextStyle(
+                                      fontFamily: Assets.HuawenKt,
+                                      fontSize: (Random().nextInt(10) + 15)
+                                          .toDouble(),
+                                      color: Colors.primaries[Random()
+                                          .nextInt(
+                                          Colors.primaries.length)],
+                                    )),
+                              )
+                          ),
                         ),
                       ],
                     ),
@@ -78,7 +77,7 @@ class FriendLinkItem extends StatelessWidget {
           Align(
             alignment: Alignment.topCenter,
             child: GestureDetector(
-              onTap: () => launchURL(bean.linkAvatar),
+              onTap: () => launchURL(bean.logo),
               child: Container(
                 width: 100,
                 height: 100,
@@ -87,7 +86,7 @@ class FriendLinkItem extends StatelessWidget {
                         .primaries[Random().nextInt(Colors.primaries.length)],
                     borderRadius: const BorderRadius.all(Radius.circular(50.0)),
                     image: DecorationImage(
-                      image: NetworkImage(bean.linkAvatar),
+                      image: NetworkImage(bean.logo),
                       fit: BoxFit.cover,
                     )),
               ),
@@ -109,7 +108,7 @@ class FriendLinkItem extends StatelessWidget {
                 ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0)),
-                onPressed: () => launchURL(bean.linkAddress),
+                onPressed: () => launchURL(bean.href),
               ),
             ),
           )

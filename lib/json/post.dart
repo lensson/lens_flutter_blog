@@ -20,14 +20,14 @@ class PostListResponseEntity {
   int success;
   String resultCode;
   String message;
-  List<Model> models;
+  List<ArticleItem> models;
   PageInfo pageInfo;
 
   factory PostListResponseEntity.fromJson(Map<String, dynamic> json) => PostListResponseEntity(
     success: json["success"],
     resultCode: json["resultCode"],
     message: json["message"],
-    models: List<Model>.from(json["models"].map((x) => Model.fromJson(x))),
+    models: List<ArticleItem>.from(json["models"].map((x) => ArticleItem.fromJson(x))),
     pageInfo: PageInfo.fromJson(json["pageInfo"]),
   );
 
@@ -40,8 +40,8 @@ class PostListResponseEntity {
   };
 }
 
-class Model {
-  Model({
+class ArticleItem {
+  ArticleItem({
     this.id,
     this.title,
     this.comments,
@@ -59,6 +59,8 @@ class Model {
     this.categoryName,
   });
 
+
+
   int id;
   String title;
   int comments;
@@ -71,11 +73,11 @@ class Model {
   int syncStatus;
   String author;
   String thumbnail;
-  List<TagsList> tagsList;
+  List<Tag> tagsList = List();
   int categoryId;
   String categoryName;
 
-  factory Model.fromJson(Map<String, dynamic> json) => Model(
+  factory ArticleItem.fromJson(Map<String, dynamic> json) => ArticleItem(
     id: json["id"],
     title: json["title"],
     comments: json["comments"],
@@ -88,32 +90,36 @@ class Model {
     syncStatus: json["syncStatus"],
     author: json["author"],
     thumbnail: json["thumbnail"],
-    tagsList: List<TagsList>.from(json["tagsList"].map((x) => TagsList.fromJson(x))),
+    tagsList: List<Tag>.from(json["tagsList"].map((x) => Tag.fromJson(x))),
     categoryId: json["categoryId"],
     categoryName: json["categoryName"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "title": title,
-    "comments": comments,
-    "status": status,
-    "summary": summary,
-    "views": views,
-    "weight": weight,
-    "createTime": createTime,
-    "updateTime": updateTime,
-    "syncStatus": syncStatus,
-    "author": author,
-    "thumbnail": thumbnail,
-    "tagsList": List<dynamic>.from(tagsList.map((x) => x.toJson())),
-    "categoryId": categoryId,
-    "categoryName": categoryName,
-  };
+  Map<String, dynamic> toJson() {
+    if(tagsList==null)
+      tagsList = new List<Tag>();
+    return {
+      "id": id,
+      "title": title,
+      "comments": comments,
+      "status": status,
+      "summary": summary,
+      "views": views,
+      "weight": weight,
+      "createTime": createTime,
+      "updateTime": updateTime,
+      "syncStatus": syncStatus,
+      "author": author,
+      "thumbnail": thumbnail,
+      "tagsList": List<dynamic>.from(tagsList.map((x) => x.toJson())),
+      "categoryId": categoryId,
+      "categoryName": categoryName,
+    };
+  }
 }
 
-class TagsList {
-  TagsList({
+class Tag {
+  Tag({
     this.id,
     this.name,
   });
@@ -121,7 +127,7 @@ class TagsList {
   int id;
   String name;
 
-  factory TagsList.fromJson(Map<String, dynamic> json) => TagsList(
+  factory Tag.fromJson(Map<String, dynamic> json) => Tag(
     id: json["id"],
     name: json["name"],
   );
@@ -154,4 +160,9 @@ class PageInfo {
     "size": size,
     "total": total,
   };
+
+
+}
+class PostListRequestEntity extends ArticleItem{
+
 }

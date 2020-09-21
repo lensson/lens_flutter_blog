@@ -2,16 +2,19 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:lens_flutter_blog/config/assets.dart';
 
 import 'package:lens_flutter_blog/config/platform_type.dart';
 import 'package:lens_flutter_blog/json/article_item_bean.dart';
+import 'package:lens_flutter_blog/json/post.dart';
 import 'package:lens_flutter_blog/widgets/hover_zoom_widget.dart';
 
 
-class ArticleItem extends StatelessWidget {
-  final ArticleItemBean bean;
+class ArticleItemWidget extends StatelessWidget {
 
-  const ArticleItem({Key key, @required this.bean}) : super(key: key);
+  final ArticleItem bean;
+
+  const ArticleItemWidget({Key key, @required this.bean}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +53,15 @@ class ArticleItem extends StatelessWidget {
                   height: cardHeight,
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                    image: bean.imageAddress.isEmpty
+                    image: bean.thumbnail.isEmpty
                         ? null
                         : DecorationImage(
-                      image: AssetImage('assets${bean.imageAddress}'),
+                      image : NetworkImage(bean.thumbnail),
+//                      image: AssetImage('assets${bean.thumbnail}'),
                       fit: BoxFit.cover,
                     ),
                   ),
-                  child: bean.imageAddress.isEmpty
+                  child: bean.thumbnail.isEmpty
                       ? Container(
                     width: cardWidth,
                     height: cardHeight,
@@ -81,10 +85,10 @@ class ArticleItem extends StatelessWidget {
         Container(
           width: isNotMobile ? 0.86 * cardWidth : 0.95 * cardWidth,
           child: Text(
-            bean.articleName,
+            bean.title,
             style: const TextStyle(
               fontSize: 20,
-              fontFamily: 'huawen_kt',
+              fontFamily: Assets.Montserrat,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -128,7 +132,7 @@ class ArticleItem extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(left: 5),
             child: Text(
-              getDate(DateTime.parse(bean.createTime)),
+              getDate(DateTime.fromMillisecondsSinceEpoch(bean.createTime)),
               style: const TextStyle(
                 fontSize: 12,
                 color: Color(0xff8D8D8D),

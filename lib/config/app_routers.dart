@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:lens_flutter_blog/pages/friend_link_page.dart';
 
 import 'package:lens_flutter_blog/pages/module.dart';
 import 'base_config.dart';

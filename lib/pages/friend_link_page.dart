@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:lens_flutter_blog/json/friend_link_bean.dart';
-import 'package:lens_flutter_blog/widgets/web_bar.dart';
-import 'package:lens_flutter_blog/widgets/friend_link_item.dart';
+import 'package:lens_flutter_blog/apis/linkAPI.dart';
+import 'package:lens_flutter_blog/config/platform_type.dart';
+import 'package:lens_flutter_blog/json/friend_link.dart';
 import 'package:lens_flutter_blog/widgets/common_layout.dart';
+import 'package:lens_flutter_blog/widgets/friend_link_item.dart';
+import 'package:lens_flutter_blog/widgets/web_bar.dart';
 
-class FriendLinkPage extends StatelessWidget {
-  final beans = FriendLinkBean().beans;
+class FriendLinkPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return new FriendLinkPageState();
+  }
+}
+
+class FriendLinkPageState extends State<FriendLinkPage> {
+  List<FriendLink> linkList = [];
+
+  @override
+  void initState() {
+    LinkAPI.getFriendLinkList(context: context).then((result) {
+      if (result != null) linkList = result.models;
+      setState(() {});
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +40,9 @@ class FriendLinkPage extends StatelessWidget {
           child: isNotMobile
               ? SingleChildScrollView(
                   child: Wrap(
-                    children: List.generate(beans.length, (index) {
+                    children: List.generate(linkList.length, (index) {
                       return FriendLinkItem(
-                        bean: beans[index],
+                        bean: linkList[index],
                       );
                     }),
                   ),
@@ -32,10 +50,10 @@ class FriendLinkPage extends StatelessWidget {
               : ListView.builder(
                   itemBuilder: (ctx, index) {
                     return FriendLinkItem(
-                      bean: beans[index],
+                      bean: linkList[index],
                     );
                   },
-                  itemCount: beans.length,
+                  itemCount: linkList.length,
                 ),
         ),
       ),

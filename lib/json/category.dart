@@ -31,14 +31,14 @@ class CategoryListResult {
   int success;
   String resultCode;
   String message;
-  List<Model> models;
+  List<Category> models;
 
   factory CategoryListResult.fromJson(Map<String, dynamic> json) =>
       CategoryListResult(
         success: json["success"],
         resultCode: json["resultCode"],
         message: json["message"],
-        models: List<Model>.from(json["models"].map((x) => Model.fromJson(x))),
+        models: List<Category>.from(json["models"].map((x) => Category.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() =>
@@ -50,8 +50,8 @@ class CategoryListResult {
       };
 }
 
-class Model {
-  Model({
+class Category {
+  Category({
     this.id,
     this.name,
   });
@@ -59,8 +59,22 @@ class Model {
   int id;
   String name;
 
-  factory Model.fromJson(Map<String, dynamic> json) =>
-      Model(
+  @override
+  int get hashCode => super.hashCode;
+
+  @override
+  bool operator ==(other) {
+    //
+    if(other is! Category){
+      return false;
+    }
+    final Category c = other;
+    return name == c.name
+        && id == c.id;
+  }
+
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      Category(
         id: json["id"],
         name: json["name"],
       );

@@ -12,7 +12,7 @@ class Assets {
   static final String LOGO = "img/mala_logo_128.png";
 
   //font
-  static final String HuawenKt = "huawen_kt";
-  static final String Montserrat = "Montserrat";
-  static final String MontserratBold = "MontserratBold";
+  static const String HuawenKt = "huawen_kt";
+  static const String Montserrat = "Montserrat";
+  static const String MontserratBold = "MontserratBold";
 }

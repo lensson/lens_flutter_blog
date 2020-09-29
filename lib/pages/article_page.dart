@@ -16,13 +16,11 @@ import 'package:flutter/services.dart';
 import 'package:lens_flutter_blog/apis/postAPI.dart';
 import 'package:lens_flutter_blog/json/post.dart';
 import 'package:lens_flutter_blog/widgets/web_bar.dart';
-import '../widgets/toast_widget.dart';
-import '../config/url_launcher.dart';
-import '../widgets/toc_item.dart';
-import '../json/article_item_bean.dart';
-import '../json/article_json_bean.dart';
-import '../widgets/common_layout.dart';
-import '../logic/article_page_logic.dart';
+import 'package:lens_flutter_blog/widgets/toast_widget.dart';
+import 'package:lens_flutter_blog/config/url_launcher.dart';
+import 'package:lens_flutter_blog/widgets/toc_item.dart';
+import 'package:lens_flutter_blog/widgets/common_layout.dart';
+
 import 'package:markdown_widget/markdown_widget.dart';
 
 class ArticlePage extends StatefulWidget {

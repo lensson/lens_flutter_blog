@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lens_flutter_blog/apis/postAPI.dart';
 
 import 'package:lens_flutter_blog/config/platform_type.dart';
-import 'package:lens_flutter_blog/json/article_item_bean.dart';
-import 'package:lens_flutter_blog/logic/home_page_logic.dart';
 import 'package:lens_flutter_blog/json/category.dart';
 import 'package:lens_flutter_blog/notifier/selected_articles_item_list.dart';
 import 'package:lens_flutter_blog/widgets/article_items_mobile.dart';
@@ -20,11 +18,9 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final logic = HomePageLogic();
   ArticleType type = ArticleType.study;
 
 //  List<ArticleItemBean> showDataList = [];
-  Map<ArticleType, List<ArticleItemBean>> dataMap = Map();
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   List<Category> categoryList = [];
 

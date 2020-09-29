@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 
 
 import 'package:lens_flutter_blog/config/base_config.dart';
-import 'package:lens_flutter_blog/json/article_item_bean.dart';
 import 'package:lens_flutter_blog/json/post.dart';
 import 'package:lens_flutter_blog/logic/query_logic.dart';
-import 'package:lens_flutter_blog/pages/single_article_page.dart';
 
 class SearchDelegateWidget extends SearchDelegate<String> {
   final Map dataMap;

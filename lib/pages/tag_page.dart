@@ -6,7 +6,6 @@ import 'dart:math';
 
 
 import 'package:lens_flutter_blog/config/base_config.dart';
-import 'package:lens_flutter_blog/json/archive_item_bean.dart';
 import 'package:lens_flutter_blog/json/post.dart';
 import 'package:lens_flutter_blog/widgets/common_layout.dart';
 import 'package:lens_flutter_blog/widgets/web_bar.dart';

@@ -1,17 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+
+
+export 'package:lens_flutter_blog/config/platform_type.dart';
+import 'package:lens_flutter_blog/config/platform_type.dart';
 import 'package:lens_flutter_blog/apis/postAPI.dart';
 import 'package:lens_flutter_blog/config/assets.dart';
-import 'package:lens_flutter_blog/config/icon_font.dart';
 import 'package:lens_flutter_blog/json/post.dart';
-
-
-export '../config/platform_type.dart';
-import '../config/platform_type.dart';
-
 import 'package:lens_flutter_blog/config/base_config.dart';
 import 'package:lens_flutter_blog/config/full_screen_dialog_util.dart';
-import 'package:lens_flutter_blog/json/article_json_bean.dart';
 import 'package:lens_flutter_blog/widgets/search_widget.dart';
 import 'package:lens_flutter_blog/widgets/top_show_widget.dart';
 

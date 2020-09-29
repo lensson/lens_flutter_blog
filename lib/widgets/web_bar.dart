@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lens_flutter_blog/apis/postAPI.dart';
 import 'package:lens_flutter_blog/config/assets.dart';
 import 'package:lens_flutter_blog/config/icon_font.dart';
+import 'package:lens_flutter_blog/json/post.dart';
 
 
 export '../config/platform_type.dart';
@@ -62,21 +64,10 @@ class _WebBarState extends State<WebBar> {
             Row(
               children: <Widget>[
                 Image(
-                    image: AssetImage(Assets.LOGO),
+                  image: AssetImage(Assets.LOGO),
                   height: getScaleSizeByHeight(height, 75.0),
                   fit: BoxFit.cover,
                 ),
-//                Icon(
-//
-//                    IconFont.iconmala,
-//                    color: Color.fromARGB(255, 255, 0, 0),
-//                  size: getScaleSizeByHeight(height, 75.0),
-//                ),
-//                FlutterLogo(
-//                  size: getScaleSizeByHeight(height, 75.0),
-//                  textColor: Colors.blueGrey,
-////                  colors: Colors.blueGrey,
-//                ),
                 const SizedBox(
                   width: 30.0,
                 ),
@@ -213,10 +204,21 @@ class _WebBarState extends State<WebBar> {
               size: fontSize,
             ),
             onPressed: () async {
-              final dynamic data = await ArticleJson.loadArticles();
-              final map = Map.from(data);
 
-              showSearchWidget(context, map);
+
+              final data = await PostAPI.getArticleItemList(
+                  context: null);
+              Map<String,String> searchMap = new Map<String,String>();
+
+              if(data!=null && data.models!=null && data.models.isNotEmpty){
+                data.models.forEach((element) {
+                  searchMap.putIfAbsent(element.title, () =>element.summary);
+                });
+              }
+
+              final map = Map.from(searchMap);
+
+              showSearchWidget(context, map,data.models);
 //              showSearch(context: context, delegate: SearchDelegateWidget(map));
             })
       else
@@ -224,12 +226,13 @@ class _WebBarState extends State<WebBar> {
     ];
   }
 
-  void showSearchWidget(BuildContext context, Map map) {
+  void showSearchWidget(BuildContext context, Map map,List<ArticleItem> list) {
     FullScreenDialog.getInstance().showDialog(
       context,
       TopAnimationShowWidget(
         child: SearchWidget(
           dataMap: map,
+          itemList: list,
         ),
         distanceY: 100,
       ),

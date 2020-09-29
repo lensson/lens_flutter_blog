@@ -9,7 +9,7 @@
  **/
 
 class Assets {
-  static final String LOGO = "img/mala_logo_128.png";
+  static final String LOGO = "assets/img/mala_logo_128.png";
 
   //font
   static const String HuawenKt = "huawen_kt";

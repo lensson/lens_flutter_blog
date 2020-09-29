@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lens_flutter_blog/apis/postAPI.dart';
 
 import 'package:lens_flutter_blog/config/platform_type.dart';
 import 'package:lens_flutter_blog/json/article_item_bean.dart';
-import 'package:lens_flutter_blog/json/article_json_bean.dart';
-import 'package:lens_flutter_blog/json/post.dart';
 import 'package:lens_flutter_blog/logic/home_page_logic.dart';
 import 'package:lens_flutter_blog/json/category.dart';
 import 'package:lens_flutter_blog/notifier/selected_articles_item_list.dart';
-import 'package:lens_flutter_blog/notifier/selected_category.dart';
+import 'package:lens_flutter_blog/widgets/article_items_mobile.dart';
 import 'package:lens_flutter_blog/widgets/article_items_pc.dart';
 import 'package:lens_flutter_blog/widgets/left_bar.dart';
 import 'package:lens_flutter_blog/widgets/module.dart';
@@ -28,21 +27,26 @@ class HomePageState extends State<HomePage> {
   Map<ArticleType, List<ArticleItemBean>> dataMap = Map();
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
   List<Category> categoryList = [];
-  List<ArticleItem> itemList = [];
+
+
+
   @override
   void initState() {
 
-//    logic.getArticleData('config_study').then((List<ArticleItemBean> data) {
-//      dataMap[ArticleType.study] = data;
-//      showDataList.addAll(data);
-//      refresh();
-//      ArticleJson.loadArticles();
-//    });
+    PostAPI.getArticleItemList(
+      context: context,
+    ).then((value){
+      if(value!=null) {
+        Provider.of<SelectedArticleItemList>(context).setItemList(value.models);
+      }
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
@@ -83,36 +87,11 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget getMobileList() {
-    List<ArticleItem> itemList = Provider.of<SelectedArticleItemList>(context).itemList;
-
-    if (itemList.isEmpty) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    } else {
-      print("showDataList = $itemList");
-      return NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (overScroll) {
-          overScroll.disallowGlow();
-          return true;
+      return Consumer<SelectedArticleItemList>(
+        builder: (context,sc,child){
+          return new MobileArticleItems();
         },
-        child: ListView.builder(
-          itemCount: itemList.length,
-          padding: EdgeInsets.all(0.0),
-          itemBuilder: (ctx, index) {
-            return GestureDetector(
-              child: ArticleItemWidget(bean: itemList[index]),
-              onTap: () {
-                final name = itemList[index].title;
-                final result = Uri.encodeFull(name);
-//                Navigator.of(context).pushNamed(articlePage + '/$result',
-//                    arguments: ArticleData(index, showDataList));
-              },
-            );
-          },
-        ),
       );
-    }
   }
 
   double getScaleSizeByWidth(double width, double size) {

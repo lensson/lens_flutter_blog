@@ -103,7 +103,7 @@ class FriendLinkItem extends StatelessWidget {
                   "进入博客",
                   style: TextStyle(
                     color: Colors.white,
-                    fontFamily: "huawen_kt",
+                    fontFamily: Assets.HuawenKt,
                   ),
                 ),
                 shape: RoundedRectangleBorder(

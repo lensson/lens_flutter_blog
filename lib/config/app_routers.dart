@@ -19,10 +19,10 @@ class AppModule extends MainModule {
     ModularRouter(linkPage, child: (_, args) => FriendLinkPage()),
     ModularRouter(aboutPage, child: (_, args) => AboutPage()),
     ModularRouter("$articlePage/:name",
-            child: (_, args) => ArticlePage(
-                  name: args.params['name'],
-                  articleData: args.data,
-                )),
+        child: (_, args) => ArticlePage(
+          id: args.params['id'],
+          articleData: args.data,
+        )),
       ];
 
   @override

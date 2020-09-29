@@ -1,4 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:lens_flutter_blog/widgets/search_delegate_widget.dart';
+import 'package:provider/provider.dart';
+
+
 import 'package:lens_flutter_blog/apis/categoryAPI.dart';
 import 'package:lens_flutter_blog/apis/postAPI.dart';
 import 'package:lens_flutter_blog/config/assets.dart';
@@ -8,7 +12,7 @@ import 'package:lens_flutter_blog/json/post.dart';
 import 'package:lens_flutter_blog/notifier/selected_articles_item_list.dart';
 import 'package:lens_flutter_blog/notifier/selected_category.dart';
 
-import 'package:provider/provider.dart';
+
 
 class LeftBar extends StatefulWidget {
 
@@ -37,10 +41,10 @@ class LeftBarState extends State<LeftBar> {
         return 1;
       });
 
-      Category sc = categoryList[0];
-      if(categoryList!=null && categoryList.length>0) {
-        Provider.of<SelectedCategory>(context).setSelected(sc);
 
+      if(categoryList!=null && categoryList.length>0) {
+        Category sc = categoryList[0];
+        Provider.of<SelectedCategory>(context).setSelected(sc);
         getArticleItemListByCategory(sc);
       }
 
@@ -52,19 +56,17 @@ class LeftBarState extends State<LeftBar> {
 
   void getArticleItemListByCategory(Category sc){
 
-    PostListRequestEntity entity;
+
+    GetPostsRequest param = new GetPostsRequest();
+
     if(sc!=null) {
-      entity = new PostListRequestEntity();
-      entity.categoryId = sc.id;
-      entity.categoryName = sc.name;
+      param.categoryId = sc.id;
+      param.categoryName = sc.name;
     }
 
     PostAPI.getArticleItemList(
       context: context,
-      params: entity!=null?entity:null,
-      cacheDisk: false,
-      refresh: true,
-
+      params: param!=null?param:null,
     ).then((value){
       if(value!=null) {
         Provider.of<SelectedArticleItemList>(context).setItemList(value.models);
@@ -93,7 +95,7 @@ class LeftBarState extends State<LeftBar> {
 
       children: <Widget>[
         Text(
-          "Mala\nBlog",
+          "分类",
           style: TextStyle(
             fontSize: getScaleSizeByHeight(height, 90.0),
             fontFamily: Assets.MontserratBold,
@@ -108,9 +110,7 @@ class LeftBarState extends State<LeftBar> {
         if (isNotMobile)
           Container()
         else
-          SizedBox(
-            height: getScaleSizeByHeight(height, 40.0),
-          ),
+          getSearchButton()
       ],
     );
   }
@@ -177,7 +177,26 @@ class LeftBarState extends State<LeftBar> {
     getArticleItemListByCategory(buttonModel);
   }
 
+  Widget getSearchButton(){
+    return IconButton(
+        icon: Icon(
+          Icons.search,
+          color: const Color(0xff9E9E9E),
+        ),
+        onPressed: () async{
+          final data = await PostAPI.getArticleItemList(context: context);
+          Map map = new Map<String,String>();
+          data.models.forEach((item) {
+            map.putIfAbsent(item.title, () => item.summary);
+          });
 
+          showSearch(
+              context: context,
+              delegate: SearchDelegateWidget(map)
+          );
+        },
+    );
+  }
 
 
   SelectedCategory getCurrentSelected(){

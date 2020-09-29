@@ -4,9 +4,11 @@
 
 import 'dart:convert';
 
-PostListResponseEntity postListResponseEntityFromJson(String str) => PostListResponseEntity.fromJson(json.decode(str));
+PostListResponseEntity postListResponseEntityFromJson(String str) =>
+    PostListResponseEntity.fromJson(json.decode(str));
 
-String postListResponseEntityToJson(PostListResponseEntity data) => json.encode(data.toJson());
+String postListResponseEntityToJson(PostListResponseEntity data) =>
+    json.encode(data.toJson());
 
 class PostListResponseEntity {
   PostListResponseEntity({
@@ -23,21 +25,24 @@ class PostListResponseEntity {
   List<ArticleItem> models;
   PageInfo pageInfo;
 
-  factory PostListResponseEntity.fromJson(Map<String, dynamic> json) => PostListResponseEntity(
-    success: json["success"],
-    resultCode: json["resultCode"],
-    message: json["message"],
-    models: List<ArticleItem>.from(json["models"].map((x) => ArticleItem.fromJson(x))),
-    pageInfo: PageInfo.fromJson(json["pageInfo"]),
-  );
+  factory PostListResponseEntity.fromJson(Map<String, dynamic> json) =>
+      PostListResponseEntity(
+        success: json["success"],
+        resultCode: json["resultCode"],
+        message: json["message"],
+        models: List<ArticleItem>.from(
+            json["models"]!=null?json["models"].map((x) => ArticleItem.fromJson(x)):[]),
+        pageInfo: PageInfo.fromJson(json["pageInfo"]),
+      );
 
-  Map<String, dynamic> toJson() => {
-    "success": success,
-    "resultCode": resultCode,
-    "message": message,
-    "models": List<dynamic>.from(models.map((x) => x.toJson())),
-    "pageInfo": pageInfo.toJson(),
-  };
+  Map<String, dynamic> toJson() =>
+      {
+        "success": success,
+        "resultCode": resultCode,
+        "message": message,
+        "models": List<dynamic>.from(models.map((x) => x.toJson())),
+        "pageInfo": pageInfo.toJson(),
+      };
 }
 
 class ArticleItem {
@@ -60,7 +65,6 @@ class ArticleItem {
   });
 
 
-
   int id;
   String title;
   int comments;
@@ -77,45 +81,42 @@ class ArticleItem {
   int categoryId;
   String categoryName;
 
+
   factory ArticleItem.fromJson(Map<String, dynamic> json) => ArticleItem(
     id: json["id"],
     title: json["title"],
+    thumbnail: json["thumbnail"],
     comments: json["comments"],
     status: json["status"],
     summary: json["summary"],
     views: json["views"],
     weight: json["weight"],
     createTime: json["createTime"],
-    updateTime: json["updateTime"],
     syncStatus: json["syncStatus"],
     author: json["author"],
-    thumbnail: json["thumbnail"],
-    tagsList: List<Tag>.from(json["tagsList"].map((x) => Tag.fromJson(x))),
+    tagsList: json["tagsList"]!=null?List<Tag>.from(json["tagsList"].map((x) => Tag.fromJson(x))):null,
     categoryId: json["categoryId"],
     categoryName: json["categoryName"],
   );
 
-  Map<String, dynamic> toJson() {
-    if(tagsList==null)
-      tagsList = new List<Tag>();
-    return {
-      "id": id,
-      "title": title,
-      "comments": comments,
-      "status": status,
-      "summary": summary,
-      "views": views,
-      "weight": weight,
-      "createTime": createTime,
-      "updateTime": updateTime,
-      "syncStatus": syncStatus,
-      "author": author,
-      "thumbnail": thumbnail,
-      "tagsList": List<dynamic>.from(tagsList.map((x) => x.toJson())),
-      "categoryId": categoryId,
-      "categoryName": categoryName,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "title": title,
+    "thumbnail": thumbnail,
+    "comments": comments,
+    "status": status,
+    "summary": summary,
+    "views": views,
+    "weight": weight,
+    "createTime": createTime,
+    "syncStatus": syncStatus,
+    "author": author,
+    "tagsList": tagsList!=null?List<dynamic>.from(tagsList.map((x) => x.toJson())):null,
+    "categoryId": categoryId,
+    "categoryName": categoryName,
+  };
+
+
 }
 
 class Tag {
@@ -127,15 +128,17 @@ class Tag {
   int id;
   String name;
 
-  factory Tag.fromJson(Map<String, dynamic> json) => Tag(
-    id: json["id"],
-    name: json["name"],
-  );
+  factory Tag.fromJson(Map<String, dynamic> json) =>
+      Tag(
+        id: json["id"],
+        name: json["name"],
+      );
 
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-  };
+  Map<String, dynamic> toJson() =>
+      {
+        "id": id,
+        "name": name,
+      };
 }
 
 class PageInfo {
@@ -149,20 +152,39 @@ class PageInfo {
   int size;
   int total;
 
-  factory PageInfo.fromJson(Map<String, dynamic> json) => PageInfo(
-    page: json["page"],
-    size: json["size"],
-    total: json["total"],
-  );
+  factory PageInfo.fromJson(Map<String, dynamic> json) =>
+      PageInfo(
+        page: json["page"],
+        size: json["size"],
+        total: json["total"],
+      );
 
-  Map<String, dynamic> toJson() => {
-    "page": page,
-    "size": size,
-    "total": total,
-  };
-
+  Map<String, dynamic> toJson() =>
+      {
+        "page": page,
+        "size": size,
+        "total": total,
+      };
 
 }
-class PostListRequestEntity extends ArticleItem{
 
+class GetPostsRequest{
+
+  int categoryId;
+  String categoryName;
+  String postsTagsId;
+
+  Map<String, dynamic> toJson() =>
+      {
+        "categoryId": categoryId,
+        "categoryName": categoryName,
+        "postsTagsId": postsTagsId,
+      };
+}
+
+class ArticleData {
+  int index;
+  List<ArticleItem> dataList;
+
+  ArticleData(this.index, this.dataList);
 }

@@ -20,6 +20,14 @@ class SelectedCategory extends ChangeNotifier{
 
   Category selectMode;
 
+  static SelectedCategory All;
+  static getDefaultCategory(){
+    if(All == null){
+      All = new SelectedCategory();
+      All.setSelected(new Category(id:0,name: "All"));
+    }
+    return All;
+  }
 
   get selected => this.selectMode;
 

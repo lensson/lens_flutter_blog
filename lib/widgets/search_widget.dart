@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:lens_flutter_blog/config/base_config.dart';
-import 'package:lens_flutter_blog/json/article_item_bean.dart';
-import 'package:lens_flutter_blog/pages/article_page.dart';
+
+import 'package:lens_flutter_blog/json/post.dart';
+
 import 'package:lens_flutter_blog/logic/query_logic.dart';
 
 class SearchWidget extends StatefulWidget {
   final Map dataMap;
-
-  const SearchWidget({Key key, @required this.dataMap}) : super(key: key);
+  final List<ArticleItem> itemList;
+  const SearchWidget({Key key, @required this.dataMap,@required this.itemList}) : super(key: key);
 
   @override
   _SearchWidgetState createState() => _SearchWidgetState();
@@ -126,15 +127,15 @@ class _SearchWidgetState extends State<SearchWidget> {
                   title: logic.getTitle(data, query),
                   onTap: () {
                     final name = showDataList[index].title;
-                    final result = Uri.encodeFull(name);
+                    final id = this.getArticleItemIdByName(name);
                     Navigator.of(context).pushNamed(
-                      articlePage + '/$result',
+                      articlePage + '/$id',
                       arguments: ArticleData(
                         index,
                         List.generate(
                           showDataList.length,
-                          (index) => ArticleItemBean(
-                            articleName: showDataList[index].title,
+                          (index) => ArticleItem(
+                            title: showDataList[index].title,
                           ),
                         ),
                       ),
@@ -152,5 +153,14 @@ class _SearchWidgetState extends State<SearchWidget> {
           );
         },
       );
+  }
+
+
+  int getArticleItemIdByName(String name){
+    widget.itemList.forEach((element) {
+      if(element.title == name)
+        return element.id;
+    });
+    return -1;
   }
 }

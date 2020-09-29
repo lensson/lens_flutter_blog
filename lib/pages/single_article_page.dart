@@ -1,12 +1,3 @@
-/**
- * @program: lens_flutter_blog
- *
- * @description:
- *
- * @author: Lens Chen
- *
- * @create: 2020-09-23 16:42
- **/
 import 'dart:math';
 import 'dart:ui';
 
@@ -14,22 +5,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lens_flutter_blog/apis/postAPI.dart';
-import 'package:lens_flutter_blog/json/post.dart';
-import 'package:lens_flutter_blog/widgets/web_bar.dart';
-import '../widgets/toast_widget.dart';
-import '../config/url_launcher.dart';
-import '../widgets/toc_item.dart';
-import '../json/article_item_bean.dart';
-import '../json/article_json_bean.dart';
-import '../widgets/common_layout.dart';
-import '../logic/article_page_logic.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
-class ArticlePage extends StatefulWidget {
-  final ArticleData articleData;
-  final int id;
+import 'package:lens_flutter_blog/config/platform_type.dart';
+import 'package:lens_flutter_blog/json/post.dart';
+import 'package:lens_flutter_blog/widgets/web_bar.dart';
+import 'package:lens_flutter_blog/config/url_launcher.dart';
+import 'package:lens_flutter_blog/widgets/toast_widget.dart';
+import 'package:lens_flutter_blog/widgets/toc_item.dart';
+import 'package:lens_flutter_blog/widgets/common_layout.dart';
 
-  const ArticlePage({Key key, this.articleData, @required this.id})
+
+
+class ArticlePage extends StatefulWidget {
+
+
+
+  final ArticleItem articleItem;
+  final String id;
+
+  const ArticlePage({Key key, this.articleItem, @required this.id})
       : super(key: key);
 
   @override
@@ -38,34 +33,32 @@ class ArticlePage extends StatefulWidget {
 
 class _ArticlePageState extends State<ArticlePage> {
 
-  String markdownData = '';
   ArticleItem bean;
-  ArticleData articleData;
+  String markdownData = '';
   final TocController controller = TocController();
+
+
 
   @override
   void initState() {
-    final int id = widget.id;
-    if (widget.articleData == null) {
-      bean = ArticleItem(id: id);
-      articleData = ArticleData(0, [bean]);
-    } else {
-      bean = widget.articleData.dataList[widget.articleData.index];
-      articleData = widget.articleData;
+    final int id = int.parse(Uri.decodeFull(widget.id));
+    if(widget.articleItem == null){
+      loadArticle(id);
+    }else{
+      markdownData = widget.articleItem.summary;
     }
-    loadArticle(bean);
+
     super.initState();
   }
 
-  void loadArticle(ArticleItem bean) {
+  void loadArticle(int id) {
 
     PostAPI.getArticleItem(
         context: context,
-        id: bean.id
-    ).then((value){
+        id: id,
+    ).then((value) {
       bean = value.model;
       markdownData = bean.summary;
-
       Future.delayed(Duration(milliseconds: 200),(){
         setState(() {});
       });
@@ -85,19 +78,19 @@ class _ArticlePageState extends State<ArticlePage> {
       floatingActionButton: isNotMobile
           ? null
           : FloatingActionButton(
-        backgroundColor: Colors.white.withOpacity(0.8),
-        onPressed: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (ctx) {
-                return buildTocListWidget(fontSize: 18);
-              });
-        },
-        child: Icon(
-          Icons.format_list_bulleted,
-          color: Colors.black.withOpacity(0.5),
-        ),
-      ),
+              backgroundColor: Colors.white.withOpacity(0.8),
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (ctx) {
+                      return buildTocListWidget(fontSize: 18);
+                    });
+              },
+              child: Icon(
+                Icons.format_list_bulleted,
+                color: Colors.black.withOpacity(0.5),
+              ),
+            ),
       child: Container(
           alignment: Alignment.center,
           margin: isNotMobile
@@ -105,25 +98,25 @@ class _ArticlePageState extends State<ArticlePage> {
               : const EdgeInsets.only(left: 20, right: 20),
           child: markdownData.isEmpty
               ? const Center(
-            child: CircularProgressIndicator(),
-          )
+                  child: CircularProgressIndicator(),
+                )
               : NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (overScroll) {
-              overScroll.disallowGlow();
-              return true;
-            },
-            child: isNotMobile
-                ? getWebLayout(width, articleData, height, context)
-                : getMobileLayout(width, height, bean),
-          )),
+                  onNotification: (overScroll) {
+                    overScroll.disallowGlow();
+                    return true;
+                  },
+                  child: isNotMobile
+                      ? getWebLayout(width,  height, context)
+                      : getMobileLayout(width, height, bean),
+                )),
     );
   }
 
-  Widget getWebLayout(double width, ArticleData articleData, double height,
+  Widget getWebLayout(double width,  double height,
       BuildContext context) {
-    final bean = articleData.dataList[articleData.index];
+
     final isDark =
-    Theme.of(context).brightness == Brightness.dark ? true : false;
+        Theme.of(context).brightness == Brightness.dark ? true : false;
 
     return Container(
         margin: EdgeInsets.only(top: 20),
@@ -148,32 +141,24 @@ class _ArticlePageState extends State<ArticlePage> {
                     Expanded(
                       child: Container(
                         margin: EdgeInsets.only(left: 10),
-                        child: ListView.builder(
-                          itemCount: articleData.dataList.length,
-                          itemBuilder: (ctx, index) {
-                            final data = articleData.dataList[index];
-                            return Container(
-                              alignment: Alignment.centerLeft,
-                              child: InkWell(
-                                child: Container(
-                                  margin: EdgeInsets.fromLTRB(5, 10, 6, 10),
-                                  child: Text(
-                                    data.title,
-                                    style: TextStyle(
-                                        color: index == articleData.index
-                                            ? Colors.green
-                                            : (isDark ? Colors.grey : null),
-                                        fontSize: 14,
-                                        fontFamily: 'huawen_kt'),
-                                  ),
-                                ),
-                                onTap: () {
-                                  articleData.index = index;
-                                  loadArticle(articleData.dataList[index]);
-                                },
+
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: InkWell(
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(5, 10, 6, 10),
+                              child: Text(
+                                bean.title,
+                                style: TextStyle(
+                                    color: isDark ? Colors.grey:Colors.green,
+                                    fontSize: 14,
+                                    fontFamily: 'huawen_kt'),
                               ),
-                            );
-                          },
+                            ),
+                            onTap: () {
+                              loadArticle(bean.id);
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -187,46 +172,46 @@ class _ArticlePageState extends State<ArticlePage> {
             ),
             Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(left: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(top: 50, left: 20),
-                        child: IconButton(
-                          icon: Transform.rotate(
-                            child: Icon(
-                              Icons.arrow_drop_down_circle,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                            angle: pi,
-                          ),
-                          onPressed: () {
-                            if (controller.isAttached) controller.jumpTo(index: 0);
-                          },
+              margin: EdgeInsets.only(left: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(top: 50, left: 20),
+                    child: IconButton(
+                      icon: Transform.rotate(
+                        child: Icon(
+                          Icons.arrow_drop_down_circle,
+                          color: Colors.grey.withOpacity(0.5),
                         ),
+                        angle: pi,
                       ),
-                      Expanded(
-                        child: buildTocListWidget(),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(bottom: 50, left: 20),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_drop_down_circle,
-                            color: Colors.grey.withOpacity(0.5),
-                          ),
-                          onPressed: () {
-                            if (controller.isAttached)
-                              controller.jumpTo(index: controller.endIndex);
-                          },
-                        ),
-                      ),
-                    ],
+                      onPressed: () {
+                        if (controller.isAttached) controller.jumpTo(index: 0);
+                      },
+                    ),
                   ),
-                )),
+                  Expanded(
+                    child: buildTocListWidget(),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(bottom: 50, left: 20),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_drop_down_circle,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                      onPressed: () {
+                        if (controller.isAttached)
+                          controller.jumpTo(index: controller.endIndex);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            )),
           ],
         ));
   }
@@ -268,7 +253,7 @@ class _ArticlePageState extends State<ArticlePage> {
 
   Widget getMarkdownBody(double height, double width, BuildContext context) {
     final isDark =
-    Theme.of(context).brightness == Brightness.dark ? true : false;
+        Theme.of(context).brightness == Brightness.dark ? true : false;
 
     return MarkdownWidget(
       data: markdownData,
@@ -276,8 +261,8 @@ class _ArticlePageState extends State<ArticlePage> {
       loadingWidget: Container(),
       styleConfig: StyleConfig(
           pConfig: PConfig(
-              onLinkTap: (url) => launchURL(url),
-              selectable: false
+            onLinkTap: (url) => launchURL(url),
+            selectable: false
           ),
           titleConfig: TitleConfig(
             showDivider: false,
@@ -317,12 +302,12 @@ class _ArticlePageState extends State<ArticlePage> {
                         child: Container(
                           margin: EdgeInsets.only(bottom: 50),
                           decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Color(0xff006EDF), width: 2),
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                4,
-                              )),
-                              color: Color(0xff007FFF)
+                            border:
+                                Border.all(color: Color(0xff006EDF), width: 2),
+                            borderRadius: BorderRadius.all(Radius.circular(
+                              4,
+                            )),
+                            color: Color(0xff007FFF)
                           ),
                           width: 100,
                           height: 30,
@@ -346,7 +331,7 @@ class _ArticlePageState extends State<ArticlePage> {
             );
           }, language: 'dart'),
           markdownTheme:
-          isDark ? MarkdownTheme.darkTheme : MarkdownTheme.lightTheme),
+              isDark ? MarkdownTheme.darkTheme : MarkdownTheme.lightTheme),
     );
   }
 
@@ -354,4 +339,5 @@ class _ArticlePageState extends State<ArticlePage> {
     if (mounted) setState(() {});
   }
 }
+
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lens_flutter_blog/apis/postAPI.dart';
+import 'package:lens_flutter_blog/config/base_config.dart';
 import 'package:lens_flutter_blog/json/category.dart';
 import 'package:lens_flutter_blog/json/post.dart';
 import 'package:lens_flutter_blog/notifier/selected_articles_item_list.dart';
@@ -50,11 +51,10 @@ class PCArticleItems extends StatelessWidget {
                 return GestureDetector(
                   child: ArticleItemWidget(bean: itemList[index]),
                   onTap: () {
-                    final name = itemList[index].title;
-                    final result = Uri.encodeFull(name);
-//                        Navigator.of(context).pushNamed(
-//                            articlePage + '/$result',
-//                            arguments: ArticleData(index, showDataList));
+                    final id = itemList[index].id;
+                        Navigator.of(context).pushNamed(
+                            articlePage + '/$id',
+                            arguments: ArticleData(index, itemList));
                   },
                 );
               }),

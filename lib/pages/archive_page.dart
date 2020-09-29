@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-
-
-
+import 'package:lens_flutter_blog/apis/archiveAPI.dart';
+import 'package:lens_flutter_blog/apis/postAPI.dart';
+import 'package:lens_flutter_blog/config/assets.dart';
 import 'package:lens_flutter_blog/config/base_config.dart';
-import 'package:lens_flutter_blog/json/article_item_bean.dart';
-import 'package:lens_flutter_blog/json/archive_item_bean.dart';
+import 'package:lens_flutter_blog/json/archive.dart';
+import 'package:lens_flutter_blog/json/post.dart';
+import 'package:lens_flutter_blog/utils/date.dart';
 import 'package:lens_flutter_blog/widgets/web_bar.dart';
 import 'package:lens_flutter_blog/widgets/common_layout.dart';
-import 'package:lens_flutter_blog/pages/article_page.dart';
+
 
 
 class ArchivePage extends StatefulWidget {
@@ -17,36 +18,58 @@ class ArchivePage extends StatefulWidget {
 }
 
 class _ArchivePageState extends State<ArchivePage> {
-  List<ArchiveItemBean> beans = [];
-  bool hasInitialed = false;
+  List<ArchiveModel> modelList = [];
+
+//  List<ArticleItem> listOnTag = [];
   bool isFromTag = false;
 
-  void initialData(List<ArchiveItemBean> transBeans) {
+  bool hasInitialed = false;
+
+  void initialData() {
     hasInitialed = true;
-    if (transBeans == null) {
-      ArchiveItemBean.loadAsset('config_archive').then((data) {
-        beans.addAll(data);
+    List arguments = ModalRoute.of(context).settings.arguments;
+
+    if (arguments != null && arguments.length == 1 && (arguments[0] is Tag)) {
+      isFromTag = true;
+
+      GetPostsRequest param = new GetPostsRequest();
+      Tag tag = arguments[0] as Tag;
+      param.postsTagsId = tag.id.toString();
+
+      PostAPI.getArticleItemList(
+        context: context,
+        params: param,
+      ).then((value) {
+        List<ArticleItem> listOnTag = value.models;
+        ArchiveModel archiveModel = new ArchiveModel();
+        archiveModel.tagName = tag.name;
+        archiveModel.archivePosts = listOnTag;
+        modelList.add(archiveModel);
         setState(() {});
       });
     } else {
-      isFromTag = true;
-      beans.addAll(transBeans);
+      ArchiveAPI.getArchiveList(
+        context: context,
+      ).then((result) {
+        if (result != null) {
+          this.modelList.addAll(result.models);
+          setState(() {});
+        }
+      });
     }
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final isNotMobile = !PlatformType().isMobile();
-    final List<ArchiveItemBean> transBeans =
-        ModalRoute.of(context).settings.arguments;
+
     if (!hasInitialed) {
-      initialData(transBeans);
+      initialData();
     }
 
     return CommonLayout(
       pageType: PageType.archive,
-      child: beans.isEmpty
+      child: modelList.isEmpty
           ? const Center(
               child: CircularProgressIndicator(),
             )
@@ -66,14 +89,23 @@ class _ArchivePageState extends State<ArchivePage> {
                       return true;
                     },
                     child: ListView.builder(
-                      itemCount: beans.length,
+                      itemCount: modelList.length,
                       itemBuilder: (ctx, index) {
-                        final List<YearBean> yearBeans = beans[index].beans;
+                        final List<ArticleItem> archivePostList =
+                            modelList[index].archivePosts;
+                        String label;
+                        if (!isFromTag) {
+                          DateTime date = DateTime.fromMillisecondsSinceEpoch(
+                              modelList[index].archiveDate);
+                          label = DateUtil.getYearAndMonth(date);
+                        } else {
+                          label = modelList[index].tagName;
+                        }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              '${!isFromTag ? beans[index].year : beans[index].tag}',
+                              '${label}',
                               style: isNotMobile
                                   ? Theme.of(context).textTheme.headline4
                                   : Theme.of(context).textTheme.headline6,
@@ -85,9 +117,9 @@ class _ArchivePageState extends State<ArchivePage> {
                                   : EdgeInsets.all(0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children:
-                                    List.generate(yearBeans.length, (index2) {
-                                  final yearBean = yearBeans[index2];
+                                children: List.generate(archivePostList.length,
+                                    (index2) {
+                                  final archivePost = archivePostList[index2];
                                   return Container(
                                     margin: EdgeInsets.only(top: 8),
                                     child: isNotMobile
@@ -96,21 +128,25 @@ class _ArchivePageState extends State<ArchivePage> {
                                               openArticlePage(
                                                   context,
                                                   List.generate(
-                                                      yearBeans.length,
-                                                      (index) => ArticleItemBean(
-                                                          articleName:
-                                                              yearBeans[index]
-                                                                  .articleName)),
+                                                      archivePostList.length,
+                                                      (index) => ArticleItem(
+                                                          title:
+                                                              archivePostList[
+                                                                      index]
+                                                                  .title,
+                                                          id: archivePostList[
+                                                                  index]
+                                                              .id)),
                                                   index2);
                                             },
                                             leading: Text(
-                                              '${yearBean.articleName}',
+                                              '${archivePost.title}',
                                               style: const TextStyle(
                                                   fontSize: 20,
-                                                  fontFamily: 'huawen_kt'),
+                                                  fontFamily: Assets.HuawenKt),
                                             ),
                                             trailing: Text(
-                                              '${getDate(DateTime.parse(yearBean.createTime))}',
+                                              '${getDate(DateTime.fromMillisecondsSinceEpoch(archivePost.createTime))}',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subtitle1,
@@ -120,11 +156,11 @@ class _ArchivePageState extends State<ArchivePage> {
                                             onPressed: () => openArticlePage(
                                                 context,
                                                 List.generate(
-                                                    yearBeans.length,
-                                                    (index) => ArticleItemBean(
-                                                        articleName:
-                                                            yearBeans[index]
-                                                                .articleName)),
+                                                    archivePostList.length,
+                                                    (index) => ArticleItem(
+                                                        title: archivePostList[
+                                                                index]
+                                                            .title)),
                                                 index2),
                                             child: Container(
                                               width: MediaQuery.of(context)
@@ -132,11 +168,12 @@ class _ArchivePageState extends State<ArchivePage> {
                                                       .width -
                                                   30,
                                               child: Text(
-                                                '${yearBean.articleName}',
+                                                '${archivePost.title}',
                                                 style: TextStyle(
                                                     fontSize:
                                                         isNotMobile ? 20 : 15,
-                                                    fontFamily: 'huawen_kt'),
+                                                    fontFamily:
+                                                        Assets.HuawenKt),
                                               ),
                                             ),
                                           ),
@@ -156,11 +193,11 @@ class _ArchivePageState extends State<ArchivePage> {
   }
 
   void openArticlePage(
-      BuildContext context, List<ArticleItemBean> beans, int index) {
-    final name = beans[index].articleName;
-    final result = Uri.encodeFull(name);
-    Navigator.of(context).pushNamed(articlePage + '/$result',
-        arguments: ArticleData(index, beans));
+      BuildContext context, List<ArticleItem> beans, int index) {
+    final id = beans[index].id;
+
+    Navigator.of(context)
+        .pushNamed(articlePage + '/$id', arguments: ArticleData(index, beans));
   }
 
   String getDate(DateTime time) {

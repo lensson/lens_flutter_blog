@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lens_flutter_blog/apis/tagAPI.dart';
+import 'package:lens_flutter_blog/config/assets.dart';
 import 'dart:math';
 
 
 import 'package:lens_flutter_blog/config/base_config.dart';
 import 'package:lens_flutter_blog/json/archive_item_bean.dart';
+import 'package:lens_flutter_blog/json/post.dart';
 import 'package:lens_flutter_blog/widgets/common_layout.dart';
 import 'package:lens_flutter_blog/widgets/web_bar.dart';
 
@@ -15,14 +18,18 @@ class TagPage extends StatefulWidget {
 }
 
 class _TagPageState extends State<TagPage> {
-  List<ArchiveItemBean> beans = [];
+
+  List<Tag> beans = [];
+//  List<ArchiveItemBean> beans = [];
 
   @override
   void initState() {
-    ArchiveItemBean.loadAsset('config_tag').then((data) {
-      beans.addAll(data);
+
+    TagAPI.getTagList(context: context).then((value) {
+      beans.addAll(value.models);
       setState(() {});
     });
+
     super.initState();
   }
 
@@ -57,10 +64,10 @@ class _TagPageState extends State<TagPage> {
                                 arguments: [bean]);
                           },
                           child: Text(
-                            bean.tag,
+                            bean.name,
                             style: TextStyle(
                               fontSize: (Random().nextInt(40) + 20).toDouble(),
-                              fontFamily: 'huawen_kt',
+                              fontFamily: Assets.HuawenKt,
                               color: Colors.primaries[
                                   Random().nextInt(Colors.primaries.length)],
                             ),

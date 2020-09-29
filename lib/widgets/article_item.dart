@@ -5,7 +5,6 @@ import 'package:flutter/painting.dart';
 import 'package:lens_flutter_blog/config/assets.dart';
 
 import 'package:lens_flutter_blog/config/platform_type.dart';
-import 'package:lens_flutter_blog/json/article_item_bean.dart';
 import 'package:lens_flutter_blog/json/post.dart';
 import 'package:lens_flutter_blog/widgets/hover_zoom_widget.dart';
 

@@ -11,6 +11,7 @@ import 'package:lens_flutter_blog/widgets/module.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() {
     return new HomePageState();
@@ -18,10 +19,12 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  ArticleType type = ArticleType.study;
+
 
 //  List<ArticleItemBean> showDataList = [];
+
   final GlobalKey<ScaffoldState> globalKey = GlobalKey();
+
   List<Category> categoryList = [];
 
 
@@ -99,4 +102,4 @@ class HomePageState extends State<HomePage> {
   }
 }
 
-enum ArticleType { life, study, topic }
+

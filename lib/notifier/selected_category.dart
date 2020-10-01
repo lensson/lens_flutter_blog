@@ -18,18 +18,16 @@ import 'package:provider/provider.dart';
 
 class SelectedCategory extends ChangeNotifier{
 
-  Category selectMode;
+  Category selectMode = DefaultCategory;
 
-  static SelectedCategory All;
-  static getDefaultCategory(){
-    if(All == null){
-      All = new SelectedCategory();
-      All.setSelected(new Category(id:0,name: "All"));
-    }
-    return All;
-  }
+  static final String ALL = "All";
+  static final ALLID = 0;
 
-  get selected => this.selectMode;
+  static Category DefaultCategory = new Category(id:ALLID,name:ALL);
+
+
+
+  get selected => selectMode;
 
   setSelected(Category selected){
     this.selectMode = selected;

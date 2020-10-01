@@ -58,7 +58,7 @@ class ArticleItem {
     this.updateTime,
     this.syncStatus,
     this.author,
-    this.thumbnail,
+    this.thumbnail='',
     this.tagsList,
     this.categoryId,
     this.categoryName,
@@ -85,7 +85,7 @@ class ArticleItem {
   factory ArticleItem.fromJson(Map<String, dynamic> json) => ArticleItem(
     id: json["id"],
     title: json["title"],
-    thumbnail: json["thumbnail"],
+    thumbnail: json["thumbnail"]!=null?json["thumbnail"]:"",
     comments: json["comments"],
     status: json["status"],
     summary: json["summary"],

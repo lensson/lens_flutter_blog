@@ -158,6 +158,7 @@ class _ArchivePageState extends State<ArchivePage> {
                                                 List.generate(
                                                     archivePostList.length,
                                                     (index) => ArticleItem(
+                                                        id: archivePostList[index].id,
                                                         title: archivePostList[
                                                                 index]
                                                             .title)),

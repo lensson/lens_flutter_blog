@@ -51,6 +51,7 @@ class _ArticlePageState extends State<ArticlePage> {
       bean = widget.articleData.dataList[widget.articleData.index];
       articleData = widget.articleData;
     }
+
     loadArticle(bean);
     super.initState();
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:lens_flutter_blog/notifier/selected_category.dart';
 import 'package:lens_flutter_blog/pages/friend_link_page.dart';
 
 import 'package:lens_flutter_blog/pages/module.dart';
+import 'package:provider/provider.dart';
 import 'base_config.dart';
 
 
@@ -18,9 +20,9 @@ class AppModule extends MainModule {
     ModularRouter(archivePage, child: (_, args) => ArchivePage()),
     ModularRouter(linkPage, child: (_, args) => FriendLinkPage()),
     ModularRouter(aboutPage, child: (_, args) => AboutPage()),
-    ModularRouter("$articlePage/:name",
+    ModularRouter("$articlePage/:id",
         child: (_, args) => ArticlePage(
-          id: args.params['id'],
+          id: int.parse(args.params['id']),
           articleData: args.data,
         )),
       ];
@@ -33,6 +35,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int curHour = DateTime.now().hour;
+    // Provider.of<SelectedCategory>(context).setSelected(SelectedCategory.DefaultCategory);
     return MaterialApp(
       title: 'Mala blog',
       theme: ThemeData(

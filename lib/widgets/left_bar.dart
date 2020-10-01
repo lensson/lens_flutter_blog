@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+
 import 'package:lens_flutter_blog/widgets/search_delegate_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,8 @@ class LeftBar extends StatefulWidget {
 
   LeftBar(this.homePageSize);
 
+
+
   @override
   State<StatefulWidget> createState() {
     return new LeftBarState();
@@ -32,24 +35,37 @@ class LeftBarState extends State<LeftBar> {
 
   @override
   void initState() {
+    final platform = PlatformType();
 
-    CategoryAPI.getCategoryList(context: this.context).then((value){
+    CategoryAPI.getCategoryList(context: this.context).then((value) {
       this.categoryList = value.models;
-      this.categoryList.sort((a,b){
-        if(a.id<b.id)
+      this.categoryList.sort((a, b) {
+        if (a.id < b.id)
           return -1;
         return 1;
       });
-
-
-      if(categoryList!=null && categoryList.length>0) {
-        Category sc = categoryList[0];
-        Provider.of<SelectedCategory>(context).setSelected(sc);
-        getArticleItemListByCategory(sc);
-      }
-
       this.refresh();
     });
+
+    // if(!platform.isMobile()){
+    //   CategoryAPI.getCategoryList(context: this.context).then((value){
+    //     this.categoryList = value.models;
+    //     this.categoryList.sort((a,b){
+    //       if(a.id<b.id)
+    //         return -1;
+    //       return 1;
+    //     });
+    //
+    //
+    //     if(categoryList!=null && categoryList.length>0) {
+    //       Category sc = categoryList[0];
+    //       Provider.of<SelectedCategory>(context).setSelected(sc);
+    //       getArticleItemListByCategory(sc);
+    //     }
+    //
+    //     this.refresh();
+    //   });
+    // }
 
     super.initState();
   }

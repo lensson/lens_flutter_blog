@@ -10,25 +10,20 @@ import 'package:provider/provider.dart';
 
 import 'article_item.dart';
 
-
-
 class PCArticleItems extends StatelessWidget {
-
   final Size size;
 
   PCArticleItems(this.size);
-
-
 
   @override
   Widget build(BuildContext context) {
 //    Category currentSelected;
 
-
     double width = size.width;
-    double height =size.height;
+    double height = size.height;
 
-    List<ArticleItem> itemList = Provider.of<SelectedArticleItemList>(context).list;
+    List<ArticleItem> itemList =
+        Provider.of<SelectedArticleItemList>(context).list;
 
     return Expanded(
       child: Container(
@@ -36,31 +31,29 @@ class PCArticleItems extends StatelessWidget {
             left: 0.06 * width, right: 0.06 * width, top: 0.02 * width),
         child: itemList.isEmpty
             ? const Center(
-          child: CircularProgressIndicator(),
-        )
+                child: CircularProgressIndicator(),
+              )
             : NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (overScroll) {
-              overScroll.disallowGlow();
-              return true;
-            },
-            child: GridView.count(
-              crossAxisCount: 3,
-              padding: EdgeInsets.fromLTRB(
-                  0.02 * width, 0.02 * height, 0.02 * width, 0),
-              children: List.generate(itemList.length, (index) {
-                return GestureDetector(
-                  child: ArticleItemWidget(bean: itemList[index]),
-                  onTap: () {
-                    final id = itemList[index].id;
-                        Navigator.of(context).pushNamed(
-                            articlePage + '/$id',
+                onNotification: (overScroll) {
+                  overScroll.disallowGlow();
+                  return true;
+                },
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  padding: EdgeInsets.fromLTRB(
+                      0.02 * width, 0.02 * height, 0.02 * width, 0),
+                  children: List.generate(itemList.length, (index) {
+                    return GestureDetector(
+                      child: ArticleItemWidget(bean: itemList[index]),
+                      onTap: () {
+                        final id = itemList[index].id;
+                        Navigator.of(context).pushNamed(articlePage + '/$id',
                             arguments: ArticleData(index, itemList));
-                  },
-                );
-              }),
-            )),
+                      },
+                    );
+                  }),
+                )),
       ),
     );
   }
-
 }

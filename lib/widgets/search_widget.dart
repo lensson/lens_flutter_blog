@@ -157,10 +157,10 @@ class _SearchWidgetState extends State<SearchWidget> {
 
 
   int getArticleItemIdByName(String name){
-    widget.itemList.forEach((element) {
-      if(element.title == name)
-        return element.id;
+    ArticleItem item = widget.itemList.firstWhere((element){
+      return element.title == name;
     });
-    return -1;
+    if(item!=null)
+      return item.id;
   }
 }

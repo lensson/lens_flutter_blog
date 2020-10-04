@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lens_flutter_blog/apis/postAPI.dart';
 
 
 //import 'package:lens_flutter_blog/platform_dector/module.dart';
 import 'package:lens_flutter_blog/config/module.dart';
+import 'package:lens_flutter_blog/widgets/search_delegate_widget.dart';
 
 import 'web_bar.dart';
 
@@ -79,9 +81,13 @@ class CommonLayout extends StatelessWidget {
         if (pageType == PageType.home) {
           globalKey?.currentState?.openDrawer();
         } else {
-//          final dynamic data = await ArticleJson.loadArticles();
-//          final map = Map.from(data);
-//          showSearch(context: context, delegate: SearchDelegateWidget(map));
+
+          final data = await PostAPI.getArticleItemList(context: context);
+          Map map = new Map<String,String>();
+          data.models.forEach((item) {
+            map.putIfAbsent(item.title, () => item.summary);
+          });
+          showSearch(context: context, delegate: SearchDelegateWidget(map,data.models));
         }
       },
       child: Icon(

@@ -136,6 +136,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                           showDataList.length,
                           (index) => ArticleItem(
                             title: showDataList[index].title,
+                            id: id,
                           ),
                         ),
                       ),

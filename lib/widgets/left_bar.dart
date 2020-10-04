@@ -57,6 +57,10 @@ class LeftBarState extends State<LeftBar> {
     //     });
     //
     //
+
+
+
+
     //     if(categoryList!=null && categoryList.length>0) {
     //       Category sc = categoryList[0];
     //       Provider.of<SelectedCategory>(context).setSelected(sc);
@@ -208,7 +212,7 @@ class LeftBarState extends State<LeftBar> {
 
           showSearch(
               context: context,
-              delegate: SearchDelegateWidget(map)
+              delegate: SearchDelegateWidget(map,data.models),
           );
         },
     );

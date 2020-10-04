@@ -19,7 +19,7 @@ class MobileArticleItems extends StatelessWidget {
         child: CircularProgressIndicator(),
       );
     } else {
-      print("showDataList = $itemList");
+      // print("showDataList = $itemList");
       return NotificationListener<OverscrollIndicatorNotification>(
         onNotification: (overScroll) {
           overScroll.disallowGlow();

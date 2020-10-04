@@ -14,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lens_flutter_blog/apis/postAPI.dart';
+import 'package:lens_flutter_blog/config/assets.dart';
 import 'package:lens_flutter_blog/json/post.dart';
 import 'package:lens_flutter_blog/widgets/web_bar.dart';
 import 'package:lens_flutter_blog/widgets/toast_widget.dart';
@@ -35,7 +36,6 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticlePageState extends State<ArticlePage> {
-
   String markdownData = '';
   ArticleItem bean;
   ArticleData articleData;
@@ -57,19 +57,14 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   void loadArticle(ArticleItem bean) {
-
-    PostAPI.getArticleItem(
-        context: context,
-        id: bean.id
-    ).then((value){
+    PostAPI.getArticleItem(context: context, id: bean.id).then((value) {
       bean = value.model;
       markdownData = bean.summary;
 
-      Future.delayed(Duration(milliseconds: 200),(){
+      Future.delayed(Duration(milliseconds: 200), () {
         setState(() {});
       });
     });
-
   }
 
   @override
@@ -84,19 +79,19 @@ class _ArticlePageState extends State<ArticlePage> {
       floatingActionButton: isNotMobile
           ? null
           : FloatingActionButton(
-        backgroundColor: Colors.white.withOpacity(0.8),
-        onPressed: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (ctx) {
-                return buildTocListWidget(fontSize: 18);
-              });
-        },
-        child: Icon(
-          Icons.format_list_bulleted,
-          color: Colors.black.withOpacity(0.5),
-        ),
-      ),
+              backgroundColor: Colors.white.withOpacity(0.8),
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (ctx) {
+                      return buildTocListWidget(fontSize: 18);
+                    });
+              },
+              child: Icon(
+                Icons.format_list_bulleted,
+                color: Colors.black.withOpacity(0.5),
+              ),
+            ),
       child: Container(
           alignment: Alignment.center,
           margin: isNotMobile
@@ -104,17 +99,17 @@ class _ArticlePageState extends State<ArticlePage> {
               : const EdgeInsets.only(left: 20, right: 20),
           child: markdownData.isEmpty
               ? const Center(
-            child: CircularProgressIndicator(),
-          )
+                  child: CircularProgressIndicator(),
+                )
               : NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (overScroll) {
-              overScroll.disallowGlow();
-              return true;
-            },
-            child: isNotMobile
-                ? getWebLayout(width, articleData, height, context)
-                : getMobileLayout(width, height, bean),
-          )),
+                  onNotification: (overScroll) {
+                    overScroll.disallowGlow();
+                    return true;
+                  },
+                  child: isNotMobile
+                      ? getWebLayout(width, articleData, height, context)
+                      : getMobileLayout(width, height, bean),
+                )),
     );
   }
 
@@ -122,7 +117,7 @@ class _ArticlePageState extends State<ArticlePage> {
       BuildContext context) {
     final bean = articleData.dataList[articleData.index];
     final isDark =
-    Theme.of(context).brightness == Brightness.dark ? true : false;
+        Theme.of(context).brightness == Brightness.dark ? true : false;
 
     return Container(
         margin: EdgeInsets.only(top: 20),
@@ -163,7 +158,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                             ? Colors.green
                                             : (isDark ? Colors.grey : null),
                                         fontSize: 14,
-                                        fontFamily: 'huawen_kt'),
+                                        fontFamily: Assets.HuawenKt),
                                   ),
                                 ),
                                 onTap: () {
@@ -186,46 +181,46 @@ class _ArticlePageState extends State<ArticlePage> {
             ),
             Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(left: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(top: 50, left: 20),
-                        child: IconButton(
-                          icon: Transform.rotate(
-                            child: Icon(
-                              Icons.arrow_drop_down_circle,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                            angle: pi,
-                          ),
-                          onPressed: () {
-                            if (controller.isAttached) controller.jumpTo(index: 0);
-                          },
+              margin: EdgeInsets.only(left: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(top: 50, left: 20),
+                    child: IconButton(
+                      icon: Transform.rotate(
+                        child: Icon(
+                          Icons.arrow_drop_down_circle,
+                          color: Colors.grey.withOpacity(0.5),
                         ),
+                        angle: pi,
                       ),
-                      Expanded(
-                        child: buildTocListWidget(),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(bottom: 50, left: 20),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_drop_down_circle,
-                            color: Colors.grey.withOpacity(0.5),
-                          ),
-                          onPressed: () {
-                            if (controller.isAttached)
-                              controller.jumpTo(index: controller.endIndex);
-                          },
-                        ),
-                      ),
-                    ],
+                      onPressed: () {
+                        if (controller.isAttached) controller.jumpTo(index: 0);
+                      },
+                    ),
                   ),
-                )),
+                  Expanded(
+                    child: buildTocListWidget(),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(bottom: 50, left: 20),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_drop_down_circle,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                      onPressed: () {
+                        if (controller.isAttached)
+                          controller.jumpTo(index: controller.endIndex);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            )),
           ],
         ));
   }
@@ -267,17 +262,15 @@ class _ArticlePageState extends State<ArticlePage> {
 
   Widget getMarkdownBody(double height, double width, BuildContext context) {
     final isDark =
-    Theme.of(context).brightness == Brightness.dark ? true : false;
+        Theme.of(context).brightness == Brightness.dark ? true : false;
 
     return MarkdownWidget(
       data: markdownData,
       controller: controller,
       loadingWidget: Container(),
       styleConfig: StyleConfig(
-          pConfig: PConfig(
-              onLinkTap: (url) => launchURL(url),
-              selectable: false
-          ),
+          pConfig:
+              PConfig(onLinkTap: (url) => launchURL(url), selectable: false),
           titleConfig: TitleConfig(
             showDivider: false,
             commonStyle: TextStyle(color: Theme.of(context).textSelectionColor),
@@ -301,51 +294,57 @@ class _ArticlePageState extends State<ArticlePage> {
               ),
             );
           },
-          preConfig: PreConfig(preWrapper: (child, text) {
-            return Stack(
-              children: <Widget>[
-                child,
-                Container(
-                  margin: EdgeInsets.only(top: 5, right: 5),
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: text));
-                      Widget toastWidget = Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 50),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(color: Color(0xff006EDF), width: 2),
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                4,
-                              )),
-                              color: Color(0xff007FFF)
-                          ),
-                          width: 100,
-                          height: 30,
-                          child: Center(
-                            child: Material(
-                              color: Colors.transparent,
-                              child: Text(
-                                '复制成功',
-                                style: TextStyle(fontSize: 10, color: Colors.white),
+          preConfig: PreConfig(
+              preWrapper: (child, text) {
+                return Stack(
+                  children: <Widget>[
+                    child,
+                    Container(
+                      margin: EdgeInsets.only(top: 5, right: 5),
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: text));
+                          Widget toastWidget = Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 50),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Color(0xff006EDF), width: 2),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(
+                                    4,
+                                  )),
+                                  color: Color(0xff007FFF)),
+                              width: 100,
+                              height: 30,
+                              child: Center(
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: Text(
+                                    '复制成功',
+                                    style: TextStyle(
+                                        fontSize: 10, color: Colors.white),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          );
+                          ToastWidget().showToast(context, toastWidget, 1);
+                        },
+                        icon: Icon(
+                          Icons.content_copy,
+                          size: 10,
                         ),
-                      );
-                      ToastWidget().showToast(context, toastWidget, 1);
-                    },
-                    icon: Icon(Icons.content_copy, size: 10,),
-                  ),
-                )
-              ],
-            );
-          }, language: 'dart'),
+                      ),
+                    )
+                  ],
+                );
+              },
+              language: 'dart'),
           markdownTheme:
-          isDark ? MarkdownTheme.darkTheme : MarkdownTheme.lightTheme),
+              isDark ? MarkdownTheme.darkTheme : MarkdownTheme.lightTheme),
     );
   }
 
@@ -353,4 +352,3 @@ class _ArticlePageState extends State<ArticlePage> {
     if (mounted) setState(() {});
   }
 }
-
